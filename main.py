@@ -36,41 +36,9 @@ npc2_rect = npc2_image.get_rect()
 npc2_rect.topleft = (400, 400) # Dfine la ubicación del NPC
 
 # Instancia NPC 3 (Inmovil)
-
 npc3 = NPC(npc3_image, 500, 100)
 
-# Configurar el sistema de diálogo
-font = pygame.font.Font(None, 24)  # Usar una fuente por defecto de Pygame
-dialogues = ["¡Hola, soy un NPC!", "¿Te gusta este juego?", "¡Adiós!"]
-current_dialogue = 0
-show_dialogue = False
 
-# Distancia de interacción
-interaction_distance = 100  # Distancia fija para la interacción
-
-def draw_dialogue_box(text):
-    # Dibuja un cuadro de diálogo en la parte inferior de la pantalla
-    dialogue_box = pygame.Rect(50, screen_height - 150, screen_width - 100, 100)
-    pygame.draw.rect(screen, (0, 0, 0), dialogue_box)
-    pygame.draw.rect(screen, (255, 255, 255), dialogue_box, 2)
-    
-    # Renderizar el texto
-    text_surf = font.render(text, True, (255, 255, 255))
-    screen.blit(text_surf, (dialogue_box.x + 10, dialogue_box.y + 10))
-
-def check_interaction():
-    player_center = player_rect.center
-    npc_center = npc1_rect.center
-    distance = math.sqrt((player_center[0] - npc_center[0]) ** 2 + (player_center[1] - npc_center[1]) ** 2)
-    
-    # Imprimir la distancia para depuración
-    print(f'Distancia al NPC: {distance:.2f}, Distancia de interacción: {interaction_distance}')
-    
-    if distance <= interaction_distance:
-        print("Interacción activada")
-        return True
-
-    return False
 
 # Bucle principal del juego
 running = True
@@ -78,40 +46,18 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                if show_dialogue:
-                    current_dialogue += 1
-                    if current_dialogue >= len(dialogues):
-                        show_dialogue = False
-                        current_dialogue = 0
-                elif check_interaction():
-                    show_dialogue = True
 
-    # Bloque que calcula la distancia entre el player y el NPC =================================================
-    
-    player_center = player_rect.center
-    npc_center = npc1_rect.center
-    distance = math.sqrt((player_center[0] - npc_center[0]) ** 2 + (player_center[1] - npc_center[1]) ** 2)
-    
-    # Imprimir la distancia para depuración
-    print(f'Distancia al NPC: {distance:.2f}, Distancia de interacción: {interaction_distance}')
 
-    if distance <= interaction_distance:
-        print("Interacción activada")
-        
-
-    # Fin del Bloque =============================================================================================
-
+    # Movimiento del player
     keys = pygame.key.get_pressed()
-    if not show_dialogue:  # Permitir movimiento solo si no se está mostrando el diálogo
-        if keys[pygame.K_LEFT]:
+
+    if keys[pygame.K_LEFT]:
             player_rect.x -= player_speed
-        if keys[pygame.K_RIGHT]:
+    if keys[pygame.K_RIGHT]:
             player_rect.x += player_speed
-        if keys[pygame.K_UP]:
+    if keys[pygame.K_UP]:
             player_rect.y -= player_speed
-        if keys[pygame.K_DOWN]:
+    if keys[pygame.K_DOWN]:
             player_rect.y += player_speed
 
     # Asegurarse de que el jugador se mantenga dentro de la ventana
@@ -131,8 +77,7 @@ while running:
     screen.blit(npc2_image, npc2_rect.topleft)
     screen.blit(npc3.npc_image, npc3.ubicacion)
 
-    if show_dialogue:
-        draw_dialogue_box(dialogues[current_dialogue])
+
 
     pygame.display.flip()
 
@@ -142,5 +87,3 @@ while running:
 # Salir de Pygame
 pygame.quit()
 sys.exit()
-
-
